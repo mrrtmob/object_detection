@@ -1,6 +1,8 @@
 import cv2
 from yolov5 import YOLOv5
 import yaml
+from pytube import YouTube
+import numpy as np
 
 # Load the YOLOv5 model
 model = YOLOv5("assets/yolov5s.pt", device="cpu")  # Use "cuda" for GPU or "cpu"
@@ -9,8 +11,15 @@ model = YOLOv5("assets/yolov5s.pt", device="cpu")  # Use "cuda" for GPU or "cpu"
 with open("assets/coco.yaml", 'r') as f:
     class_names = yaml.safe_load(f)['names']
 
-# Start video capture (0 for the default camera)
-cap = cv2.VideoCapture(0)
+# YouTube video link
+youtube_link = "https://www.youtube.com/watch?v=lfj0Gp4AzbI"
+
+# Create a YouTube object and get the stream
+yt = YouTube(youtube_link)
+stream = yt.streams.get_highest_resolution()
+
+# Start video capture from YouTube stream
+cap = cv2.VideoCapture(stream.url)
 
 while cap.isOpened():
     ret, frame = cap.read()
